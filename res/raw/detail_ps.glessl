@@ -1,0 +1,13 @@
+precision mediump float;
+
+varying vec2 v_texcoord_0;
+varying vec2 v_texcoord_1;
+
+uniform sampler2D s_diffuse;
+uniform sampler2D s_detail;
+
+void main()
+{
+	vec4 detailSample = ( texture2D( s_detail, v_texcoord_1 ) * 2.0 );
+	gl_FragColor = texture2D( s_diffuse, v_texcoord_0 ) * detailSample;
+}

@@ -1,0 +1,12 @@
+#extension GL_OES_EGL_image_external : require
+
+precision mediump float;
+
+varying vec2 v_texcoord_0;
+
+uniform samplerExternalOES s_camera;
+
+void main()
+{
+	gl_FragColor = texture2D( s_camera, v_texcoord_0 );
+}

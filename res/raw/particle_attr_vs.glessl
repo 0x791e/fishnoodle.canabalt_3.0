@@ -1,0 +1,38 @@
+attribute vec4 a_position;
+attribute vec2 a_texcoord_0;
+
+attribute vec4 a_color_0; // particle color
+attribute vec3 a_position_blend; // particle translation
+attribute float a_float_size; // particle angle
+
+#define a_particle_translation a_position_blend
+#define a_particle_angle a_float_size
+
+varying vec2 v_texcoord_0;
+varying vec4 v_color;
+
+uniform mat4 u_mtx_modelviewproj;
+uniform mat4 u_mtx_misc;
+
+void main()
+{
+	float r = radians(a_particle_angle);
+	float rCos = cos(r);
+	float rSin = sin(r);
+
+	vec4 new_position; // rotate per the particle's angle
+	
+	new_position.w = a_position.w;	
+	new_position.x = a_position.x * rCos - a_position.y * rSin;
+	new_position.y = a_position.x * rSin + a_position.y * rCos; // rotate on Z
+	new_position.z = a_position.z;
+	
+	new_position = u_mtx_misc * new_position; // now rotate to face the camera
+
+	new_position.xyz += a_particle_translation; // finally, translate into place
+	
+	gl_Position = u_mtx_modelviewproj * new_position; // adjust by the matrix, and we're done!
+	
+	v_texcoord_0 = a_texcoord_0;
+	v_color = a_color_0;
+}
